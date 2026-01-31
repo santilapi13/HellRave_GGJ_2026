@@ -67,7 +67,6 @@ public class NPCMovement : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (anim == null)
             anim = GetComponent<Animator>();
 
         grid = FindFirstObjectByType<GridManager>();

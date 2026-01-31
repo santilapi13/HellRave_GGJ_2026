@@ -201,6 +201,21 @@ public class NPCManager : MonoBehaviour
                 }
             }
 
+            SpriteRenderer sr = characters[i].GetComponent<SpriteRenderer>();
+            Color[] hellPalette = new Color[]
+            {
+             new Color32(196, 30, 58, 255),   // #C41E3A (Rojo Sangre)
+             new Color32(255, 215, 0, 255),   // #FFD700 (Amarillo Azufre)
+             new Color32(112, 128, 144, 255), // #708090 (Gris Ceniza)
+             new Color32(128, 0, 128, 255)    // #800080 (Morado Magia)
+            };
+
+            if (sr != null)
+            {
+
+                sr.color = hellPalette[Random.Range(0, hellPalette.Length)];
+            }
+
             character.gameObject.SetActive(true);
         }
     }
