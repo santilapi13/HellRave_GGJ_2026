@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 67454afd70b799b489ade4352c5ed1fd
+guid: e9ceec49867740840836c7091a2fc974
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,35 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: suelo tiles_0
+      name: suelo tiles (1)_0
       rect:
         serializedVersion: 2
-        x: 6
-        y: 2
-        width: 636
-        height: 405
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1e41844d0226a3645a40c26ce7ee099d
-      internalID: 938197666
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: suelo tiles_1
-      rect:
-        serializedVersion: 2
-        x: 642
+        x: 2
         y: 0
-        width: 673
-        height: 405
+        width: 32
+        height: 25
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,20 +112,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a27a67a1b994d174d9a8ccb0eb2f193f
-      internalID: -2070967898
+      spriteID: 79a038123a3c7724ca93904ca689abb9
+      internalID: -274555618
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: suelo tiles_2
+      name: suelo tiles (1)_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 227
-        width: 640
-        height: 640
+        x: 40
+        y: 0
+        width: 33
+        height: 25
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,30 +134,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91511dbcb8c319e428793a47cb604e8f
-      internalID: 1053754712
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: suelo tiles_3
-      rect:
-        serializedVersion: 2
-        x: 640
-        y: 227
-        width: 640
-        height: 640
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2d4037aac3a034b4b9440b9521a50b45
-      internalID: -1516593965
+      spriteID: ad06562c9858bd54aaba8bc381afbec5
+      internalID: 634499561
       vertices: []
       indices: 
       edges: []
@@ -188,7 +144,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 9e487c92c05bb7c4fb184c14f6f362d0
+    spriteID: 20d29cd448e1ea74c9b45ab99333d671
     internalID: 0
     vertices: []
     indices: 
@@ -198,12 +154,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":640.0,"y":640.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      suelo tiles_0: 938197666
-      suelo tiles_1: -2070967898
-      suelo tiles_2: 1053754712
-      suelo tiles_3: -1516593965
+      suelo tiles (1)_0: -274555618
+      suelo tiles (1)_1: 634499561
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
