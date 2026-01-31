@@ -2,14 +2,8 @@ using UnityEngine;
 
 public class NPCIdleMovement : NPCMovement
 {
-    void OnEnable()
+    protected override void OnEnable()
     {
-        if (anim != null)
-        {
-            anim.Play("Idle");
-        } else
-        {
-            Debug.LogWarning("Animator not assigned in NPCIdleMovement.");
-        }
+        base.OnEnable();
     }
 }

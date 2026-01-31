@@ -15,7 +15,7 @@ public class NPCErraticMovement : NPCMovement
 
         void OnEnable()
     {
-        anim.Play("Walk");
+        base.OnEnable();    
         routine = StartCoroutine(ErraticRoutine());
     }
 
