@@ -1,39 +1,52 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal; // Necesario para controlar luces 2D
 
 public class NPCMaskRandomizer : MonoBehaviour
 {
+    [System.Serializable]
+    public struct MaskProfile
+    {
+        public string name;      // Solo para que te ordenes en el inspector
+        public Sprite sprite;    // La imagen de la máscara
+        public Color lightColor; // El color de luz que emitirá
+    }
+
     [Header("Referencias")]
     public SpriteRenderer maskRenderer;
+    public Light2D maskLight; // ¡Arrastra aquí el componente Light 2D!
 
-    [Header("Colección de Máscaras")]
-    [Tooltip("Tus sprites originales a color")]
-    public Sprite[] maskOptions;
+    [Header("Colección de Máscaras y sus Luces")]
+    public MaskProfile[] maskCollection; // Aquí configurarás tus parejas Sprite-Color
 
-
-    [Space(10)]
-    [Tooltip("Intensidad del brillo. 1 es normal. Más de 1 es NEON.")]
-    [Range(0f, 10f)]
-    public float neonIntensity = 0.2f; // Un valor entre 3 y 5 suele verse bien
+    [Header("Configuración")]
+    [Range(0, 100)] public int chanceOfNoMask = 25;
+    [Range(0.5f, 5f)] public float lightIntensity = 1.5f;
 
     void Start()
     {
-        EquipRandomNeonMask();
+        EquipRandomLightMask();
     }
 
-    void EquipRandomNeonMask()
+    void EquipRandomLightMask()
     {
-        if (maskRenderer == null) return;
+        if (maskRenderer == null || maskLight == null) return;
 
 
-        // 2. Asignar Sprite Aleatorio
-        if (maskOptions.Length > 0)
+        // 2. Elegir un perfil aleatorio
+        if (maskCollection.Length > 0)
         {
-            maskRenderer.sprite = maskOptions[Random.Range(0, maskOptions.Length)];
+            MaskProfile selectedProfile = maskCollection[Random.Range(0, maskCollection.Length)];
+
+            // Asignar Sprite
+            maskRenderer.sprite = selectedProfile.sprite;
+
+            // Asignar Luz
+            maskLight.enabled = true;
+            maskLight.color = selectedProfile.lightColor;
+            maskLight.intensity = lightIntensity;
+
+            // (Opcional) Si quieres que la máscara brille un poco visualmente también
+            maskRenderer.color = Color.white;
         }
-
-
-        Color hdrGlow = new Color(neonIntensity, neonIntensity, neonIntensity, 1f);
-
-        maskRenderer.color = hdrGlow;
     }
 }
