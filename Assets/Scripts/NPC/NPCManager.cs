@@ -1,27 +1,60 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class NPCManager : MonoBehaviour
 {
     [SerializeField] private Transform npcContainer;
     [SerializeField] private Transform[] characters;
     
-    [Header("Grid Configuration")]
-    [SerializeField] private int gridRows = 3;
-    [SerializeField] private int gridColumns = 3;
-    [SerializeField] private Vector2 mapSize = new Vector2(30f, 30f);
-    [SerializeField] private Vector2 mapCenter = Vector2.zero;
-    
     [Header("Behavior Configuration")]
-    [SerializeField] private int numberOfBehaviorTypes = 3;
+    [SerializeField] private int numberOfBehaviorTypes = 2;
 
+    private GridManager gridManager;
+    private List<Vector2Int> walkableTiles;
     private int currentCharacterIndex = 0;
     private int[] behaviorAssignments;
 
     void Start()
     {
+        gridManager = FindFirstObjectByType<GridManager>();
+        if (gridManager == null)
+        {
+            Debug.LogError("GridManager not found in scene!");
+            return;
+        }
+
+        CollectWalkableTiles();
         InitializeCharacters();
         AssignBehaviors();
         initMap();
+    }
+
+    private void CollectWalkableTiles()
+    {
+        walkableTiles = new List<Vector2Int>();
+
+        for (int x = 0; x < gridManager.width; x++)
+        {
+            for (int y = 0; y < gridManager.height; y++)
+            {
+                Vector2Int gridPos = new Vector2Int(x, y);
+                if (gridManager.IsWalkable(gridPos))
+                {
+                    walkableTiles.Add(gridPos);
+                }
+            }
+        }
+
+        // Randomizar la lista de tiles caminables
+        for (int i = walkableTiles.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Vector2Int temp = walkableTiles[i];
+            walkableTiles[i] = walkableTiles[randomIndex];
+            walkableTiles[randomIndex] = temp;
+        }
+
+        Debug.Log($"Collected {walkableTiles.Count} walkable tiles.");
     }
 
     private void InitializeCharacters()
@@ -105,65 +138,70 @@ public class NPCManager : MonoBehaviour
             return;
         }
 
-        float cellWidth = mapSize.x / gridColumns;
-        float cellHeight = mapSize.y / gridRows;
-
-        Vector2 mapBottomLeft = mapCenter - (mapSize / 2f);
-
-        for (int row = 0; row < gridRows; row++)
+        if (walkableTiles == null || walkableTiles.Count == 0)
         {
-            for (int col = 0; col < gridColumns; col++)
+            Debug.LogWarning("No walkable tiles available.");
+            return;
+        }
+
+        int tileIndex = 0;
+
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (tileIndex >= walkableTiles.Count)
             {
-                if (currentCharacterIndex >= characters.Length)
+                Debug.LogWarning($"Not enough walkable tiles for all characters. Placed {i} out of {characters.Length}.");
+                break;
+            }
+
+            Transform character = characters[i];
+
+            // Obtener un tile aleatorio de la lista ya randomizada
+            Vector2Int gridPos = walkableTiles[tileIndex];
+            tileIndex++;
+
+            // Convertir la posición de grid a posición del mundo
+            Vector3 worldPosition = gridManager.GridToWorld(gridPos);
+            worldPosition.z = 0f;
+
+            character.position = worldPosition;
+
+            // Asignar comportamiento al NPC
+            GenericNPC npcComponent = character.GetComponent<GenericNPC>();
+            if (npcComponent != null)
+            {
+                NPCMovement[] allBehaviors = character.GetComponents<NPCMovement>();
+                
+                if (allBehaviors.Length > 0)
                 {
-                    Debug.LogWarning("No more characters available in the pool.");
-                    return;
-                }
-
-                Transform character = characters[currentCharacterIndex];
-                currentCharacterIndex++;
-
-                float cellMinX = mapBottomLeft.x + (col * cellWidth);
-                float cellMinY = mapBottomLeft.y + (row * cellHeight);
-                float cellMaxX = cellMinX + cellWidth;
-                float cellMaxY = cellMinY + cellHeight;
-
-                float randomX = Random.Range(cellMinX, cellMaxX);
-                float randomY = Random.Range(cellMinY, cellMaxY);
-                Vector3 randomPosition = new Vector3(randomX, randomY, 0f);
-
-                character.position = randomPosition;
-                character.position = new Vector3(character.position.x, character.position.y, 0f);
-
-                GenericNPC npcComponent = character.GetComponent<GenericNPC>();
-                if (npcComponent != null)
-                {
-                    NPCMovement[] allBehaviors = character.GetComponents<NPCMovement>();
+                    int assignedBehaviorIndex = behaviorAssignments[i];
                     
-                    if (allBehaviors.Length > 0)
+                    Debug.Log($"NPC {character.name} at {worldPosition} - Behaviors: {allBehaviors.Length}, Assigned: {assignedBehaviorIndex}");
+                    
+                    // Desactivar todos los comportamientos primero
+                    for (int j = 0; j < allBehaviors.Length; j++)
                     {
-                        int assignedBehaviorIndex = behaviorAssignments[currentCharacterIndex - 1];
-                        
-                        for (int i = 0; i < allBehaviors.Length; i++)
-                        {
-                            if (i == assignedBehaviorIndex && i < allBehaviors.Length)
-                            {
-                                allBehaviors[i].enabled = true;
-                            }
-                            else
-                            {
-                                allBehaviors[i].enabled = false;
-                            }
-                        }
+                        allBehaviors[j].enabled = false;
+                    }
+                    
+                    // Activar solo el comportamiento asignado
+                    if (assignedBehaviorIndex < allBehaviors.Length)
+                    {
+                        allBehaviors[assignedBehaviorIndex].enabled = true;
+                        Debug.Log($"  Enabled: {allBehaviors[assignedBehaviorIndex].GetType().Name}");
                     }
                     else
                     {
-                        Debug.LogWarning($"NPC {character.name} has no NPCMovement components.");
+                        Debug.LogError($"Assigned behavior index {assignedBehaviorIndex} out of range for {allBehaviors.Length} behaviors");
                     }
                 }
-
-                character.gameObject.SetActive(true);
+                else
+                {
+                    Debug.LogWarning($"NPC {character.name} has no NPCMovement components.");
+                }
             }
+
+            character.gameObject.SetActive(true);
         }
     }
 

@@ -46,6 +46,31 @@ public class GridManager : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
+    [ContextMenu("Calculate Grid Bounds from Tilemap")]
+    void CalculateGridBounds()
+    {
+        if (ground == null)
+        {
+            Debug.LogError("Ground Tilemap is not assigned!");
+            return;
+        }
+
+        ground.CompressBounds();
+        BoundsInt bounds = ground.cellBounds;
+
+        origin = new Vector2Int(bounds.xMin, bounds.yMin);
+        width = bounds.size.x;
+        height = bounds.size.y;
+
+        Debug.Log($"Grid Bounds Calculated:");
+        Debug.Log($"  Origin: {origin}");
+        Debug.Log($"  Width: {width}");
+        Debug.Log($"  Height: {height}");
+        Debug.Log($"  Bounds: from ({bounds.xMin}, {bounds.yMin}) to ({bounds.xMax}, {bounds.yMax})");
+    }
+#endif
+
     public Vector2Int WorldToGrid(Vector3 worldPos)
     {
         Vector3Int cell = ground.WorldToCell(worldPos);
