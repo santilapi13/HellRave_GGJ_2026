@@ -155,8 +155,6 @@ public class NPCManager : MonoBehaviour
                                 allBehaviors[i].enabled = false;
                             }
                         }
-                        
-                        Debug.Log($"NPC {character.name} assigned behavior type {assignedBehaviorIndex}");
                     }
                     else
                     {
