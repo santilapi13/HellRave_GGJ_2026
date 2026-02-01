@@ -19,6 +19,7 @@ public class LobbyManager : MonoBehaviour
     
     [Header("UI")]
     [SerializeField] private List<Image> playerSlots;
+    [SerializeField] private List<GameObject> players;
     [SerializeField] private Color colorEmpty = Color.gray;
     [SerializeField] private Color colorJoined = Color.red;
     [SerializeField] private Color colorReady = Color.green;
@@ -102,7 +103,6 @@ public class LobbyManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput pi)
     {
-        Debug.Log($"NUEVO JUGADOR: ID={pi.playerIndex} | Esquema={pi.currentControlScheme} | Dispositivo={pi.devices[0]}");
         pi.SwitchCurrentActionMap("Player");
         // 1. Validar duplicados (Teclado compartido)
         if (PlayerConfigurationManager.Instance.IsDeviceUsed(pi.devices[0], pi.currentControlScheme))
@@ -129,6 +129,7 @@ public class LobbyManager : MonoBehaviour
             readyAction.performed += myCallback;
         }
         
+        players[pi.playerIndex].SetActive(true);
         UpdateSlotUI(pi.playerIndex, false);
     }
 
@@ -138,6 +139,8 @@ public class LobbyManager : MonoBehaviour
         if (ctx.control.device != player.Device) return;
         player.IsReady = !player.IsReady;
         UpdateSlotUI(player.PlayerIndex, player.IsReady);
+        Animator anim =  players[player.PlayerIndex].GetComponent<Animator>();
+        anim.SetTrigger("ChangeState");
         CheckIfAllReady();
     }
 
