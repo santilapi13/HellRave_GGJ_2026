@@ -2,12 +2,33 @@ using UnityEngine;
 
 public class GenericNPC : MonoBehaviour
 {
+    [SerializeField] private Animator animator;
+    [SerializeField] private NPCMovement[] movements;
+
     void Start()
     {
     }
 
-    void Die()
+    public void Die()
     {
-        //anim.Play("Death");
+        Debug.Log("me empujaron");
+        animator.SetTrigger("Pushed");
+    }
+
+    public void DisableMovement()
+    {
+        foreach(NPCMovement mov in movements)
+        {
+            mov.enabled = false;
+        }
+    }
+
+    public void EnabledMovement()
+    {
+        foreach(NPCMovement mov in movements)
+        {
+            mov.enabled = true;
+        }
     }
 }
+

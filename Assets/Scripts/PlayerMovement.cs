@@ -11,8 +11,17 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private Animator animator;
+    [SerializeField] private bool canMove = true;
+    private GameObject child;
+    private SpriteRenderer sprite;
+    
     private Vector2 moveInput;
-    private Rigidbody rb; // Si usas física, o transform si no.
+
+    private void Awake()
+    {
+        child = transform.GetChild(0).gameObject;
+        sprite = GetComponent<SpriteRenderer>();
+    }
 
     // Esta función se llama automáticamente si el PlayerInput está en "Send Messages"
     // y tu acción en el Input Asset se llama "Move".
@@ -29,8 +38,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        if(!canMove) return;
         // Movimiento simple modificando el transform
         Vector3 movement = new Vector3(moveInput.x,moveInput.y, 0) * speed * Time.deltaTime;
         transform.Translate(movement);
@@ -41,23 +51,44 @@ public class PlayerMovement : MonoBehaviour
         Vector2 origen = (Vector2)transform.position;
         Collider2D[] todosLosTocados = Physics2D.OverlapCircleAll(origen, radioDeAtaque, capaJugadores);
 
-    foreach (Collider2D col in todosLosTocados)
-    {
-        // 1. FILTRO DE IDENTIDAD: Si soy yo mismo, paso al siguiente
-        if (col.gameObject == gameObject) continue;
-
-        // 2. FILTRO DE COMPONENTE: ¿Es realmente un jugador?
-        // Esto evita que un enemigo golpee a otro enemigo si comparten capa
-        //PlayerController jugador = col.GetComponent<PlayerController>();
-
-        if (col != null)
+        foreach (Collider2D col in todosLosTocados)
         {
-            Debug.Log($"¡Golpeaste a {col.name}!");
-            // jugador.RecibirDano(daňo);
+            // 1. FILTRO DE IDENTIDAD: Si soy yo mismo, paso al siguiente
+            if (col.gameObject == gameObject) continue;
 
-            // 3. IMPORTANTE: 'break' para golpear solo al primero que encontremos y salir
-            break; 
+            // 2. FILTRO DE COMPONENTE: ¿Es realmente un jugador?
+            // Esto evita que un enemigo golpee a otro enemigo si comparten capa
+            PlayerMovement jugador = col.GetComponent<PlayerMovement>();
+
+            if (jugador != null)
+            {
+                jugador.Die();
+                return; 
+            }
+        }
+        
+        if(todosLosTocados.Length >= 2){
+            Debug.Log($"Entre");
+            GenericNPC npc = todosLosTocados[1].GetComponent<GenericNPC>();
+            npc.Die();
         }
     }
+
+    public void Die()
+    {
+       animator.SetTrigger("Die");
     }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
+    }
+
+    public void DestoyMask()
+    {
+        sprite.color = Color.white;
+        Destroy(child);
+    }
+
+     
 }
