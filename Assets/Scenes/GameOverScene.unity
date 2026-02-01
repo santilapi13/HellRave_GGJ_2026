@@ -220,7 +220,6 @@ GameObject:
   - component: {fileID: 370194400}
   - component: {fileID: 370194403}
   - component: {fileID: 370194402}
-  - component: {fileID: 370194401}
   m_Layer: 5
   m_Name: Jugador ganador (1)
   m_TagString: Untagged
@@ -247,19 +246,6 @@ RectTransform:
   m_AnchoredPosition: {x: 30, y: 313}
   m_SizeDelta: {x: 1338.8915, y: 376.9967}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &370194401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370194399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27c2654a332d3c749abf8f74fdb1f8ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WinnerText
-  winnerText: {fileID: 370194402}
 --- !u!114 &370194402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,7 +266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\xA1Jugador 1 gana!"
+  m_text: "\xA1Jugador X gana!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a65b022301f630040a69dc2a4dc576ce, type: 2}
   m_sharedMaterial: {fileID: -1478499154999221091, guid: a65b022301f630040a69dc2a4dc576ce, type: 2}
@@ -724,6 +710,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WinnerText
   winnerText: {fileID: 1883146672}
+  winnerTextShadow: {fileID: 370194402}
 --- !u!114 &1883146672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,7 +731,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\xA1Jugador 1 gana!"
+  m_text: "\xA1Jugador X gana!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a65b022301f630040a69dc2a4dc576ce, type: 2}
   m_sharedMaterial: {fileID: -1478499154999221091, guid: a65b022301f630040a69dc2a4dc576ce, type: 2}
