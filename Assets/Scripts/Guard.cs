@@ -4,6 +4,7 @@ public class Guard : MonoBehaviour
 {
     [SerializeField] private NPCErraticMovement erraticMovement;
     [SerializeField] private ChasePlayerMovement chasePlayerMovement;
+    [SerializeField] private Animator animator;
     public static Guard Instance;
 
     private void Awake()
@@ -21,8 +22,9 @@ public class Guard : MonoBehaviour
 
     void Start()
     {
-        erraticMovement.enabled = true;
+        erraticMovement.enabled = false;
         chasePlayerMovement.enabled = false;
+        animator.SetBool("isChasing", false);
     }
 
     public void ChangeToChase(Transform playerToChase)
@@ -30,12 +32,14 @@ public class Guard : MonoBehaviour
         erraticMovement.enabled = false;
         chasePlayerMovement.SetTarget(playerToChase);
         chasePlayerMovement.enabled = true;
+        animator.SetBool("isChasing", true);
     }
 
     public void ChangeToErratic()
     {
         chasePlayerMovement.enabled = false;
-        erraticMovement.enabled = true;
+        //erraticMovement.enabled = true;
+        animator.SetBool("isChasing", false);
     }
 
 }
