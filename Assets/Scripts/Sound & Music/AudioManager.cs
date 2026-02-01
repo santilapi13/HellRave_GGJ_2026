@@ -21,10 +21,6 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    private void Start() {
-        PlayMusic("MinijuegoPancho");
-    }
-
     public void PlayMusic(int name) {
         if(currentMusic == name) return;
         

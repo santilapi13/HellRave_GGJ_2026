@@ -43,11 +43,11 @@ public class GameManager : MonoBehaviour
             winner.transform.SetParent(null);
             DontDestroyOnLoad(winner);
             
+            Destroy(Guard.Instance.gameObject);
+            SceneManager.LoadScene("GameOverScene");
             winner.transform.position = new Vector3(0.5f, -1.85f, 0);
             winner.transform.localScale = new Vector3(7, 7, 1);
             winner.transform.GetChild(0).GetChild(0).gameObject.SetActive(false); // Desactivar luz
-            Destroy(Guard.Instance.gameObject);
-            SceneManager.LoadScene("GameOverScene");
         }
     }
 

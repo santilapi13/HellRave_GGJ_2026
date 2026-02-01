@@ -34,6 +34,12 @@ public class LobbyManager : MonoBehaviour
         InitializeSlots();
     }
 
+    private void Start()
+    {
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlayMusic("Lobby");
+    }
+
 
     private void Update()
     {
@@ -165,6 +171,8 @@ public class LobbyManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("MergeScene");
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlayMusic("Game");
     }
 
     private void OnDestroy(){
