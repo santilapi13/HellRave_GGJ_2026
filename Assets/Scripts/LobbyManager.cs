@@ -95,6 +95,8 @@ public class LobbyManager : MonoBehaviour
                 splitScreenIndex: -1,   
                 pairWithDevice: device  // El teclado
             );
+
+            
         }
     }
 
@@ -106,39 +108,60 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    private void RestoreExistingPlayers(){
+    var existingConfigs = PlayerConfigurationManager.Instance.GetPlayerConfigs();
+
+    foreach (var config in existingConfigs)
+    {
+        // Forzamos que IsReady sea false al volver al lobby para que deban confirmar de nuevo
+        config.IsReady = false;
+
+        // Reconectamos el PlayerInput a la lógica del Lobby
+        SetupPlayerInLobby(config.PlayerInput);
+    }
+    }
+
 
     public void OnPlayerJoined(PlayerInput pi)
     {
-        pi.SwitchCurrentActionMap("Player");
-        // 1. Validar duplicados (Teclado compartido)
-        if (PlayerConfigurationManager.Instance.IsDeviceUsed(pi.devices[0], pi.currentControlScheme))
-        {
-            Destroy(pi.gameObject);
-            return;
-        }
-
         // 2. Registrar en el Manager
         PlayerConfigurationManager.Instance.AddPlayer(pi);
+        SetupPlayerInLobby(pi);
+        
+    }
 
-        // 3. Suscribir la acción de "Listo"
-        // Buscamos la acción "Act" dentro de este PlayerInput específico
+    private void SetupPlayerInLobby(PlayerInput pi)
+    {
+        pi.SwitchCurrentActionMap("Player");
+
         var readyAction = pi.actions.FindAction(confirmActionName);
-    
         if (readyAction != null)
         {
             var config = PlayerConfigurationManager.Instance.GetPlayerConfigs()
-                        .Find(p => p.PlayerIndex == pi.playerIndex);
+                            .Find(p => p.PlayerIndex == pi.playerIndex);
+            config.IsReady = false;
+
+            // --- SOLUCIÓN AL ERROR DE KEY DUPLICADA ---
+            // Si por alguna razón el índice ya está, desuscribimos lo viejo y removemos
+            if (playerEvents.ContainsKey(pi.playerIndex))
+            {
+                playerEvents[pi.playerIndex].action.performed -= playerEvents[pi.playerIndex].callback;
+                playerEvents.Remove(pi.playerIndex);
+            }
 
             Action<InputAction.CallbackContext> myCallback = ctx => TogglePlayerReady(config, ctx);
+            
+            // Ahora es seguro agregar
             playerEvents.Add(pi.playerIndex, (readyAction, myCallback));
-
             readyAction.performed += myCallback;
         }
-        
-        players[pi.playerIndex].SetActive(true);
-        UpdateSlotUI(pi.playerIndex, false);
-    }
 
+        if (pi.playerIndex < players.Count)
+        {
+            players[pi.playerIndex].SetActive(true);
+            UpdateSlotUI(pi.playerIndex, false);
+        }
+    }
 
     private void TogglePlayerReady(PlayerConfigurationManager.PlayerData player,InputAction.CallbackContext ctx)
     {

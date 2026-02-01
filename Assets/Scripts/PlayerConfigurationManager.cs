@@ -46,6 +46,17 @@ public class PlayerConfigurationManager : MonoBehaviour
 
     public void AddPlayer(PlayerInput pi)
     {
+
+        // Si ya lo tenemos, no lo agregamos a la lista, pero nos aseguramos que sea hijo
+        if (playerConfigs.Any(p => p.PlayerIndex == pi.playerIndex))
+        {
+            pi.transform.SetParent(this.transform);
+            return;
+        }
+
+        // Hacerlo persistente
+        pi.transform.SetParent(this.transform);
+
         PlayerData newPlayer = new PlayerData
         {
             PlayerIndex = pi.playerIndex,
@@ -56,7 +67,6 @@ public class PlayerConfigurationManager : MonoBehaviour
         };
 
         playerConfigs.Add(newPlayer);
-        //pi.transform.SetParent(transform);
     
     }
 

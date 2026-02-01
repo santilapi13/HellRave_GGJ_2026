@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public void GetPlayers()
     {
         this.players.Clear();
-        var players = FindObjectsByType<UnityEngine.InputSystem.PlayerInput>(FindObjectsSortMode.None);
+        var players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
         foreach (var player in players)
         {
             this.players.Add(player.gameObject);
