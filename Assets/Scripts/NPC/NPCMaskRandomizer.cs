@@ -1,52 +1,100 @@
 using UnityEngine;
-using UnityEngine.Rendering.Universal; // Necesario para controlar luces 2D
+using UnityEngine.Rendering.Universal; // Necesario para Light 2D
 
 public class NPCMaskRandomizer : MonoBehaviour
 {
     [System.Serializable]
     public struct MaskProfile
     {
-        public string name;      // Solo para que te ordenes en el inspector
-        public Sprite sprite;    // La imagen de la máscara
-        public Color lightColor; // El color de luz que emitirá
+        public string name;
+        public Sprite sprite;
+        public Color lightColor;
     }
 
     [Header("Referencias")]
     public SpriteRenderer maskRenderer;
-    public Light2D maskLight; // ¡Arrastra aquí el componente Light 2D!
+    public Light2D maskLight;
 
-    [Header("Colección de Máscaras y sus Luces")]
-    public MaskProfile[] maskCollection; // Aquí configurarás tus parejas Sprite-Color
+    [Header("Colección")]
+    public MaskProfile[] maskCollection;
 
-    [Header("Configuración")]
+    [Header("Probabilidad")]
     [Range(0, 100)] public int chanceOfNoMask = 25;
-    [Range(0.5f, 5f)] public float lightIntensity = 1.5f;
+
+    [Header("Configuración de Luz")]
+    [Tooltip("Intensidad/Brillo")]
+    [Range(0.5f, 500f)] public float lightIntensity = 500.0f;
+
+    [Tooltip("Radio de la luz (Funciona en ambos modos)")]
+    [Range(0.5f, 10f)] public float lightRadius = 2.0f;
+
+    [Header("Modo Difuminado")]
+    [Tooltip("TRUE: Luz redonda (Point). FALSE: Luz con forma de máscara (Sprite).")]
+    public bool useSoftFalloff = false;
+
+    [Tooltip("Suavizado de bordes. En modo Sprite afecta la transparencia del borde.")]
+    [Range(0f, 1f)] public float blurAmount = 0.5f;
+
+    // Ajuste de profundidad para que la luz no quede enterrada
+    private float zOffsetFix = -0.5f;
 
     void Start()
     {
-        EquipRandomLightMask();
+        ConfigureAndEquip();
     }
 
-    void EquipRandomLightMask()
+    void ConfigureAndEquip()
     {
         if (maskRenderer == null || maskLight == null) return;
 
 
-        // 2. Elegir un perfil aleatorio
+
+        // 2. Elegir perfil
         if (maskCollection.Length > 0)
         {
-            MaskProfile selectedProfile = maskCollection[Random.Range(0, maskCollection.Length)];
+            MaskProfile profile = maskCollection[Random.Range(0, maskCollection.Length)];
 
-            // Asignar Sprite
-            maskRenderer.sprite = selectedProfile.sprite;
+            // --- VISUAL (Sprite Renderer) ---
+            maskRenderer.sprite = profile.sprite;
+            maskRenderer.color = Color.white;
 
-            // Asignar Luz
+            // --- LUZ (Light 2D) ---
             maskLight.enabled = true;
-            maskLight.color = selectedProfile.lightColor;
+
+            Color finalColor = profile.lightColor;
+            finalColor.a = 1f;
+            maskLight.color = finalColor;
             maskLight.intensity = lightIntensity;
 
-            // (Opcional) Si quieres que la máscara brille un poco visualmente también
-            maskRenderer.color = Color.white;
+            // --- APLICAR RADIO (Común a ambos) ---
+            // Esto le dice a Unity hasta dónde llega la luz físicamente
+            maskLight.pointLightOuterRadius = lightRadius;
+
+            if (useSoftFalloff)
+            {
+                // MODO POINT (Círculo perfecto)
+                maskLight.lightType = Light2D.LightType.Point;
+                maskLight.lightCookieSprite = null;
+
+                // En modo Point, el "blur" controla el radio interior
+                maskLight.pointLightInnerRadius = lightRadius * (1f - blurAmount);
+            }
+            else
+            {
+                // MODO SPRITE (Forma de la máscara)
+                maskLight.lightType = Light2D.LightType.Sprite;
+                maskLight.lightCookieSprite = profile.sprite;
+
+                // IMPORTANTE: En modo Sprite, a veces Unity necesita que escalemos el objeto
+                // para que coincida visualmente con el radio deseado.
+                // Esta línea sincroniza el tamaño visual con el radio numérico.
+                maskLight.transform.localScale = Vector3.one * lightRadius;
+
+                // En modo Sprite, usamos el "blur" para controlar la opacidad del borde (Falloff)
+                // 0 = Borde duro, 1 = Muy transparente en los bordes
+                maskLight.falloffIntensity = blurAmount;
+            }
+
         }
     }
 }
