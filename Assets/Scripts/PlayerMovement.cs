@@ -134,6 +134,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void DestoyMask()
     {
+        AudioManager.Instance.PlaySFX("fire",false);
         sprite.color = Color.white;
         Destroy(child);
     }

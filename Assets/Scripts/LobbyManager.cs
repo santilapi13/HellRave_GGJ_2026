@@ -26,6 +26,13 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Color colorJoined = Color.red;
     [SerializeField] private Color colorReady = Color.green;
 
+    [SerializeField] private TMPro.TextMeshProUGUI winnerText;
+    [SerializeField] private TMPro.TextMeshProUGUI winnerTextShadow;
+
+    [Header("Countdown")]
+    [SerializeField] private float countdownTime = 3f;
+    private Coroutine countdownCoroutine;
+
     private Dictionary<int, (InputAction action, Action<InputAction.CallbackContext> callback)> playerEvents 
         = new Dictionary<int, (InputAction action, Action<InputAction.CallbackContext> callback)>();
 
@@ -126,6 +133,7 @@ public class LobbyManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput pi)
     {
+        AudioManager.Instance.PlaySFX("join",false);
         // 2. Registrar en el Manager
         PlayerConfigurationManager.Instance.AddPlayer(pi);
         SetupPlayerInLobby(pi);
@@ -189,6 +197,14 @@ public class LobbyManager : MonoBehaviour
         if (ctx.control.device != player.Device) return;
         player.IsReady = !player.IsReady;
         UpdateSlotUI(player.PlayerIndex, player.IsReady);
+
+        if (!player.IsReady && countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
+            winnerText.text = ""; // Limpia el texto
+            winnerTextShadow.text = "";
+        }
         Animator anim =  players[player.PlayerIndex].GetComponent<Animator>();
         anim.SetTrigger("ChangeState");
         CheckIfAllReady();
@@ -199,16 +215,20 @@ public class LobbyManager : MonoBehaviour
         if (index < playerSlots.Count)
         {
             playerSlots[index].color = isReady ? colorReady : colorJoined;
+            if(isReady) AudioManager.Instance.PlaySFX("risa",false);
         }
     }
 
     private void CheckIfAllReady()
     {
-        var players = PlayerConfigurationManager.Instance.GetPlayerConfigs();
-        if (players.Count >= 2 && players.All(p => p.IsReady))
+        var configs = PlayerConfigurationManager.Instance.GetPlayerConfigs();
+        // Si todos están listos (mínimo 2) y no hay una cuenta atrás ya corriendo
+        if (configs.Count >= 2 && configs.All(p => p.IsReady))
         {
-            Debug.Log("¡TODOS LISTOS! INICIANDO JUEGO...");
-            StartGame();
+            if (countdownCoroutine == null)
+            {
+                countdownCoroutine = StartCoroutine(StartCountdownRoutine());
+            }
         }
     }
 
@@ -235,6 +255,21 @@ public class LobbyManager : MonoBehaviour
 
     // Limpiamos el diccionario
     playerEvents.Clear();
+    }
+
+    private System.Collections.IEnumerator StartCountdownRoutine()
+    {
+        float timer = countdownTime;
+        while (timer > 0)
+        {
+            // Actualiza el texto (puedes usar winnerText si no tienes otro)
+            winnerText.text = Mathf.Ceil(timer).ToString();
+            winnerTextShadow.text = winnerText.text;
+            
+            yield return new WaitForSeconds(1f);
+            timer--;
+        }
+        StartGame();
     }
 
 }

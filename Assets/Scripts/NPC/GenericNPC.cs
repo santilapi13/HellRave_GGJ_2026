@@ -11,6 +11,7 @@ public class GenericNPC : MonoBehaviour
 
     public void Die(Transform player)
     {
+        AudioManager.Instance.PlaySFX("push",false);
         animator.SetTrigger("Pushed");
         Guard.Instance.ChangeToChase(player);
     }
