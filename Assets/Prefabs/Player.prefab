@@ -77,20 +77,20 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 0}
+  m_SortingLayerID: -1645970827
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 6f2c6c2b0bdc15841acda6add34c6492, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.4, y: 0.7}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &6520741033346873281
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 180818802041381761}
   - component: {fileID: 5875821381487834070}
   - component: {fileID: 3660688229590898819}
+  - component: {fileID: 945509897705338092}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -173,8 +174,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1645970827
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 09e8378a587192148a2f5584bc1c352d, type: 3}
   m_Color: {r: 0.97735846, g: 0.97735846, b: 0.97735846, a: 1}
@@ -186,7 +187,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!95 &2919191841066205038
 Animator:
   serializedVersion: 7
@@ -226,18 +227,21 @@ MonoBehaviour:
   maskCollection:
   - name: a
     sprite: {fileID: 21300000, guid: 6f2c6c2b0bdc15841acda6add34c6492, type: 3}
-    lightColor: {r: 1, g: 0.71603525, b: 0, a: 0}
+    lightColor: {r: 1, g: 0.71603525, b: 0, a: 1}
   - name: aa
     sprite: {fileID: 21300000, guid: 1efc9b2aa6e5e7048ba66f0cfef954a5, type: 3}
-    lightColor: {r: 0, g: 0.15722227, b: 1, a: 0}
+    lightColor: {r: 0, g: 0.15722227, b: 1, a: 1}
   - name: r
     sprite: {fileID: 21300000, guid: cdb7177a31d767442bbfef514852adcf, type: 3}
-    lightColor: {r: 1, g: 0, b: 0, a: 0}
+    lightColor: {r: 1, g: 0, b: 0, a: 1}
   - name: v
     sprite: {fileID: 21300000, guid: 095820e1998b70d4bb750a2cfb27446c, type: 3}
-    lightColor: {r: 0.16099632, g: 1, b: 0, a: 0}
+    lightColor: {r: 0.16099632, g: 1, b: 0, a: 1}
   chanceOfNoMask: 0
-  lightIntensity: 5
+  lightIntensity: 1.5
+  lightRadius: 1
+  useSoftFalloff: 0
+  blurAmount: 0.5
 --- !u!114 &180818802041381761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,9 +324,21 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.004114342, y: -0.05785817}
-  m_Size: {x: 0.23131143, y: 0.5842837}
+  m_Offset: {x: -0.011489296, y: 0.27401328}
+  m_Size: {x: 0.27556115, y: 0.6580329}
   m_Direction: 0
+--- !u!210 &945509897705338092
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6520741033346873281}
+  m_Enabled: 1
+  m_SortingLayerID: -1645970827
+  m_SortingLayer: 2
+  m_SortingOrder: 1
+  m_SortAtRoot: 0
 --- !u!1 &9060991710797695109
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,12 +391,12 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 00000000757ae49d
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 3
   m_AlphaBlendOnOverlap: 0
-  m_OverlapOperation: 0
+  m_OverlapOperation: 1
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
