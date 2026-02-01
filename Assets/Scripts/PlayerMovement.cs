@@ -1,19 +1,36 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
 
     [Header("Configuración del Ataque")]
-    public float radioDeAtaque = 0.5f;
+    [SerializeField] private float radioDeAtaque = 0.5f;
+    [SerializeField] private float atackCDR = 1.0f;
+
     [Header("Filtros")]
-    public LayerMask capaJugadores;
+    [SerializeField] private LayerMask capaJugadores;
 
     [SerializeField] private float speed = 5f;
     [SerializeField] private Animator animator;
-    [SerializeField] private bool canMove = true;
+    private bool canMove = true;
+    private bool canAtack = true;
+    [SerializeField] public bool CanMove
+    {
+        get { return canMove; }
+        set 
+        { 
+            // Verificamos si el valor realmente cambió para no spamear
+            if (canMove != value)
+            {
+                canMove = value;
+            }
+        }
+    }
     private GameObject child;
     private SpriteRenderer sprite;
+    private bool isDead = false;
     
     private Vector2 moveInput;
 
@@ -23,24 +40,44 @@ public class PlayerMovement : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
     }
 
-    // Esta función se llama automáticamente si el PlayerInput está en "Send Messages"
-    // y tu acción en el Input Asset se llama "Move".
     public void OnMove(InputValue value)
     {
+        if (!CanMove)
+        {
+         moveInput = Vector2.zero;
+         return;   
+        }
         moveInput = value.Get<Vector2>();
     }
 
     public void OnAct(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed && canAtack)
         {
+            CanMove = false;
+            canAtack = false;
             animator.SetTrigger("Empujar");
         }
     }
 
+    public void EndAct()
+    {
+        CanMove = true;
+        StartCoroutine(AtackCooldown());
+    }
+
+    private IEnumerator AtackCooldown()
+    {
+        // Esperamos los segundos definidos
+        yield return new WaitForSeconds(atackCDR);
+
+        // Volvemos a activar el ataque
+        canAtack = true;
+    }
+
     void FixedUpdate()
     {
-        if(!canMove) return;
+        if(!CanMove) return;
         // Movimiento simple modificando el transform
         Vector3 movement = new Vector3(moveInput.x,moveInput.y, 0) * speed * Time.deltaTime;
         transform.Translate(movement);
@@ -48,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void EjecutarGolpe()
     {
+
         Vector2 origen = (Vector2)transform.position;
         Collider2D[] todosLosTocados = Physics2D.OverlapCircleAll(origen, radioDeAtaque, capaJugadores);
 
@@ -59,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
             // 2. FILTRO DE COMPONENTE: ¿Es realmente un jugador?
             // Esto evita que un enemigo golpee a otro enemigo si comparten capa
             PlayerMovement jugador = col.GetComponent<PlayerMovement>();
+            if(isDead) return;
 
             if (jugador != null)
             {
@@ -80,7 +119,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Die()
     {
+       animator.speed = 0;
+       CanMove = false;
+       isDead = true;
        animator.SetTrigger("Die");
+       animator.speed = 1;
     }
 
     public void Destroy()
