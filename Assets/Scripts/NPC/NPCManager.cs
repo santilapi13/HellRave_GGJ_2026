@@ -30,6 +30,7 @@ public class NPCManager : MonoBehaviour
         InitializeCharacters();
         AssignBehaviors();
         initMap();
+        GameManager.Instance.GetPlayers();
     }
 
     private void CollectWalkableTiles()
@@ -248,6 +249,7 @@ public class NPCManager : MonoBehaviour
             splitScreenIndex: -1,
             pairWithDevice: config.Device // Esto asegura que use el teclado correcto o el gamepad
         );
+        playerInstance.name = $"Jugador {config.PlayerIndex + 1}";
         playerInstance.transform.SetParent(npcContainer.transform);
     }
 }
