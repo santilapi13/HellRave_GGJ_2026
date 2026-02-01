@@ -15,11 +15,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Tablero.unity
     guid: daa1703458153444ba5002ada1c04817
   - enabled: 1
-    path: Assets/Scenes/MergeScene 1.unity
-    guid: 082c715175be03a449b65b7dd2e3ffb0
-  - enabled: 1
     path: Assets/Scenes/MergeScene.unity
     guid: e5b3e99519b56d44995f62d6735d7f88
+  - enabled: 1
+    path: Assets/Scenes/GuardScene.unity
+    guid: 2ee937ba449ca60439971824b9da5a4d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

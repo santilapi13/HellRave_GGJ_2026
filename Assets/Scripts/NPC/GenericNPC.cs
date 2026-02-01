@@ -9,10 +9,10 @@ public class GenericNPC : MonoBehaviour
     {
     }
 
-    public void Die()
+    public void Die(Transform player)
     {
-        Debug.Log("me empujaron");
         animator.SetTrigger("Pushed");
+        Guard.Instance.ChangeToChase(player);
     }
 
     public void DisableMovement()

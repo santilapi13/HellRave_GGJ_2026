@@ -16,6 +16,7 @@ public class ChasePlayerMovement : NPCMovement
 
     void Awake()
     {
+        base.Awake();
         guard = GetComponentInParent<Guard>();
     }
 

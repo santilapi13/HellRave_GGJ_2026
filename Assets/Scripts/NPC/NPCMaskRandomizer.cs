@@ -15,13 +15,13 @@ public class NPCMaskRandomizer : MonoBehaviour
     public SpriteRenderer maskRenderer;
     public Light2D maskLight;
 
-    [Header("Colección")]
+    [Header("Colecciï¿½n")]
     public MaskProfile[] maskCollection;
 
     [Header("Probabilidad")]
     [Range(0, 100)] public int chanceOfNoMask = 25;
 
-    [Header("Configuración de Luz")]
+    [Header("Configuraciï¿½n de Luz")]
     [Tooltip("Intensidad/Brillo")]
     [Range(0.5f, 500f)] public float lightIntensity = 500.0f;
 
@@ -29,14 +29,11 @@ public class NPCMaskRandomizer : MonoBehaviour
     [Range(0.5f, 10f)] public float lightRadius = 2.0f;
 
     [Header("Modo Difuminado")]
-    [Tooltip("TRUE: Luz redonda (Point). FALSE: Luz con forma de máscara (Sprite).")]
+    [Tooltip("TRUE: Luz redonda (Point). FALSE: Luz con forma de mï¿½scara (Sprite).")]
     public bool useSoftFalloff = false;
 
     [Tooltip("Suavizado de bordes. En modo Sprite afecta la transparencia del borde.")]
     [Range(0f, 1f)] public float blurAmount = 0.5f;
-
-    // Ajuste de profundidad para que la luz no quede enterrada
-    private float zOffsetFix = -0.5f;
 
     void Start()
     {
@@ -66,13 +63,13 @@ public class NPCMaskRandomizer : MonoBehaviour
             maskLight.color = finalColor;
             maskLight.intensity = lightIntensity;
 
-            // --- APLICAR RADIO (Común a ambos) ---
-            // Esto le dice a Unity hasta dónde llega la luz físicamente
+            // --- APLICAR RADIO (Comï¿½n a ambos) ---
+            // Esto le dice a Unity hasta dï¿½nde llega la luz fï¿½sicamente
             maskLight.pointLightOuterRadius = lightRadius;
 
             if (useSoftFalloff)
             {
-                // MODO POINT (Círculo perfecto)
+                // MODO POINT (Cï¿½rculo perfecto)
                 maskLight.lightType = Light2D.LightType.Point;
                 maskLight.lightCookieSprite = null;
 
@@ -81,13 +78,13 @@ public class NPCMaskRandomizer : MonoBehaviour
             }
             else
             {
-                // MODO SPRITE (Forma de la máscara)
+                // MODO SPRITE (Forma de la mï¿½scara)
                 maskLight.lightType = Light2D.LightType.Sprite;
                 maskLight.lightCookieSprite = profile.sprite;
 
                 // IMPORTANTE: En modo Sprite, a veces Unity necesita que escalemos el objeto
                 // para que coincida visualmente con el radio deseado.
-                // Esta línea sincroniza el tamaño visual con el radio numérico.
+                // Esta lï¿½nea sincroniza el tamaï¿½o visual con el radio numï¿½rico.
                 maskLight.transform.localScale = Vector3.one * lightRadius;
 
                 // En modo Sprite, usamos el "blur" para controlar la opacidad del borde (Falloff)

@@ -4,6 +4,20 @@ public class Guard : MonoBehaviour
 {
     [SerializeField] private NPCErraticMovement erraticMovement;
     [SerializeField] private ChasePlayerMovement chasePlayerMovement;
+    public static Guard Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {

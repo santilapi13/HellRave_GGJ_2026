@@ -19,7 +19,6 @@ public class PlayerConfigurationManager : MonoBehaviour
     }
 
     private List<PlayerData> playerConfigs = new List<PlayerData>();
-    [SerializeField] private int maxPlayers = 4;
 
     private void Awake()
     {

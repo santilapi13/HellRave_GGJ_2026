@@ -18,7 +18,7 @@ public class NPCErraticMovement : NPCMovement
         routine = StartCoroutine(ErraticRoutine());
     }
 
-    void OnEnable()
+    protected override void OnEnable()
     {
         base.OnEnable();    
         StartRoutine();

@@ -14,7 +14,6 @@ public class NPCManager : MonoBehaviour
 
     private GridManager gridManager;
     private List<Vector2Int> walkableTiles;
-    private int currentCharacterIndex = 0;
     private int[] behaviorAssignments;
 
     void Start()

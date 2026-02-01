@@ -67,10 +67,14 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
-        if(todosLosTocados.Length >= 2){
-            Debug.Log($"Entre");
-            GenericNPC npc = todosLosTocados[1].GetComponent<GenericNPC>();
-            npc.Die();
+        foreach (Collider2D col in todosLosTocados)
+        {
+            GenericNPC npc = col.GetComponent<GenericNPC>();
+            if (npc != null)
+            {
+                npc.Die(transform);
+                return; 
+            }
         }
     }
 
