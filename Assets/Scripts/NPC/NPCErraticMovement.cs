@@ -13,10 +13,15 @@ public class NPCErraticMovement : NPCMovement
     int pathIndex;
     Coroutine routine;
 
-        void OnEnable()
+    public void StartRoutine()
+    {
+        routine = StartCoroutine(ErraticRoutine());
+    }
+
+    void OnEnable()
     {
         base.OnEnable();    
-        routine = StartCoroutine(ErraticRoutine());
+        StartRoutine();
     }
 
     void OnDisable()

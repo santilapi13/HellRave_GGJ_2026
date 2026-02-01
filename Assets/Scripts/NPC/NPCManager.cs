@@ -226,6 +226,11 @@ public class NPCManager : MonoBehaviour
 
     private void InstantiatePlayers()
     {
+        if (!PlayerConfigurationManager.Instance)
+        {
+            Debug.LogWarning("Initializing without players");
+            return;
+        }
         var playerConfigs = PlayerConfigurationManager.Instance.GetPlayerConfigs();
         foreach (var config in playerConfigs)
         {
