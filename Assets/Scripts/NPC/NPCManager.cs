@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class NPCManager : MonoBehaviour
 {
+    [Header("Referencias")]
     [SerializeField] private Transform npcContainer;
     [SerializeField] private Transform[] characters;
+    [SerializeField] private GameObject playerCubePrefab;
     
     [Header("Behavior Configuration")]
     [SerializeField] private int numberOfBehaviorTypes = 2;
@@ -23,6 +26,7 @@ public class NPCManager : MonoBehaviour
             return;
         }
 
+        InstantiatePlayers();
         CollectWalkableTiles();
         InitializeCharacters();
         AssignBehaviors();
@@ -220,4 +224,26 @@ public class NPCManager : MonoBehaviour
         }
     }
 
+    private void InstantiatePlayers()
+    {
+        var playerConfigs = PlayerConfigurationManager.Instance.GetPlayerConfigs();
+        foreach (var config in playerConfigs)
+        {
+            SpawnPlayer(config);
+        }
+    }
+
+     private void SpawnPlayer(PlayerConfigurationManager.PlayerData config)
+    {
+        
+        Vector3 spawnPos = Vector3.zero;
+        var playerInstance = PlayerInput.Instantiate(
+            playerCubePrefab,
+            playerIndex: config.PlayerIndex,
+            controlScheme: config.ControlScheme, // Esto asegura que sea WASD o Arrows
+            splitScreenIndex: -1,
+            pairWithDevice: config.Device // Esto asegura que use el teclado correcto o el gamepad
+        );
+        playerInstance.transform.SetParent(npcContainer.transform);
+    }
 }
