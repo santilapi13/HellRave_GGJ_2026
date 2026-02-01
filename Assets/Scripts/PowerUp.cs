@@ -23,7 +23,7 @@ public class PowerUp : MonoBehaviour
     {
         if (!collision.CompareTag("Player")) return;
 
-        UnityEngine.InputSystem.PlayerInput[] activePlayers = FindObjectsOfType<UnityEngine.InputSystem.PlayerInput>();
+        UnityEngine.InputSystem.PlayerInput[] activePlayers = FindObjectsByType<UnityEngine.InputSystem.PlayerInput>(FindObjectsSortMode.None);
 
         foreach (var player in activePlayers)
         {

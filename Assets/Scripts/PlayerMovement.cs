@@ -128,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Destroy()
     {
+        GameManager.Instance.RemovePlayer(gameObject);
         Destroy(gameObject);
     }
 
