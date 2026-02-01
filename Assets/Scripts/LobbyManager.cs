@@ -161,7 +161,7 @@ public class LobbyManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("MergeScene");
+        SceneManager.LoadScene("MergeScene 1");
     }
 
     private void OnDestroy(){
