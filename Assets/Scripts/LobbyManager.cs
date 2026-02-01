@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Color colorEmpty = Color.gray;
     [SerializeField] private Color colorJoined = Color.red;
     [SerializeField] private Color colorReady = Color.green;
+
+    private Dictionary<int, (InputAction action, Action<InputAction.CallbackContext> callback)> playerEvents 
+        = new Dictionary<int, (InputAction action, Action<InputAction.CallbackContext> callback)>();
 
     private InputAction joinAction;
 
@@ -119,7 +123,10 @@ public class LobbyManager : MonoBehaviour
             var config = PlayerConfigurationManager.Instance.GetPlayerConfigs()
                         .Find(p => p.PlayerIndex == pi.playerIndex);
 
-            readyAction.performed += ctx => TogglePlayerReady(config, ctx);
+            Action<InputAction.CallbackContext> myCallback = ctx => TogglePlayerReady(config, ctx);
+            playerEvents.Add(pi.playerIndex, (readyAction, myCallback));
+
+            readyAction.performed += myCallback;
         }
         
         UpdateSlotUI(pi.playerIndex, false);
@@ -154,8 +161,25 @@ public class LobbyManager : MonoBehaviour
 
     public void StartGame()
     {
-        //DisableAllActions();
-        SceneManager.LoadScene("Tablero");
+        SceneManager.LoadScene("MergeScene 1");
+    }
+
+    private void OnDestroy(){
+    // Recorremos todos los eventos registrados
+    foreach (var entry in playerEvents)
+    {
+        var action = entry.Value.action;
+        var callback = entry.Value.callback;
+
+        // VERIFICAMOS SI LA ACCIÓN SIGUE VIVA (El InputSystem podría haberse destruido antes)
+        if (action != null)
+        {
+            action.performed -= callback; // ¡Aquí ocurre la desuscripción mágica!
+        }
+    }
+
+    // Limpiamos el diccionario
+    playerEvents.Clear();
     }
 
 }
