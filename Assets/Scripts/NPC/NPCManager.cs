@@ -21,7 +21,6 @@ public class NPCManager : MonoBehaviour
         gridManager = FindFirstObjectByType<GridManager>();
         if (gridManager == null)
         {
-            Debug.LogError("GridManager not found in scene!");
             return;
         }
 
@@ -57,15 +56,12 @@ public class NPCManager : MonoBehaviour
             walkableTiles[i] = walkableTiles[randomIndex];
             walkableTiles[randomIndex] = temp;
         }
-
-        Debug.Log($"Collected {walkableTiles.Count} walkable tiles.");
     }
 
     private void InitializeCharacters()
     {
         if (npcContainer == null)
         {
-            Debug.LogWarning("NPC Container is not assigned.");
             return;
         }
 
@@ -85,20 +81,17 @@ public class NPCManager : MonoBehaviour
             characters[randomIndex] = temp;
         }
 
-        Debug.Log($"Initialized {characters.Length} characters from NPC Container.");
     }
 
     private void AssignBehaviors()
     {
         if (characters == null || characters.Length == 0)
         {
-            Debug.LogWarning("No characters to assign behaviors to.");
             return;
         }
 
         if (numberOfBehaviorTypes <= 0)
         {
-            Debug.LogWarning("Number of behavior types must be greater than 0.");
             return;
         }
 
@@ -131,20 +124,17 @@ public class NPCManager : MonoBehaviour
             behaviorAssignments[randomIndex] = temp;
         }
 
-        Debug.Log($"Assigned {numberOfBehaviorTypes} behavior types to {characters.Length} characters.");
     }
 
     private void initMap()
     {
         if (characters == null || characters.Length == 0)
         {
-            Debug.LogWarning("No characters available in the pool.");
             return;
         }
 
         if (walkableTiles == null || walkableTiles.Count == 0)
         {
-            Debug.LogWarning("No walkable tiles available.");
             return;
         }
 
@@ -180,8 +170,6 @@ public class NPCManager : MonoBehaviour
                 {
                     int assignedBehaviorIndex = behaviorAssignments[i];
                     
-                    Debug.Log($"NPC {character.name} at {worldPosition} - Behaviors: {allBehaviors.Length}, Assigned: {assignedBehaviorIndex}");
-                    
                     // Desactivar todos los comportamientos primero
                     for (int j = 0; j < allBehaviors.Length; j++)
                     {
@@ -192,17 +180,10 @@ public class NPCManager : MonoBehaviour
                     if (assignedBehaviorIndex < allBehaviors.Length)
                     {
                         allBehaviors[assignedBehaviorIndex].enabled = true;
-                        Debug.Log($"  Enabled: {allBehaviors[assignedBehaviorIndex].GetType().Name}");
                     }
-                    else
-                    {
-                        Debug.LogError($"Assigned behavior index {assignedBehaviorIndex} out of range for {allBehaviors.Length} behaviors");
-                    }
+                
                 }
-                else
-                {
-                    Debug.LogWarning($"NPC {character.name} has no NPCMovement components.");
-                }
+            
             }
 
             SpriteRenderer sr = characters[i].GetComponent<SpriteRenderer>();
@@ -228,7 +209,6 @@ public class NPCManager : MonoBehaviour
     {
         if (!PlayerConfigurationManager.Instance)
         {
-            Debug.LogWarning("Initializing without players");
             return;
         }
         var playerConfigs = PlayerConfigurationManager.Instance.GetPlayerConfigs();

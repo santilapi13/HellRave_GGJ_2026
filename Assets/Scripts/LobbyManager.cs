@@ -20,6 +20,8 @@ public class LobbyManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private List<Image> playerSlots;
     [SerializeField] private List<GameObject> players;
+    [SerializeField] private List<Image> controls;
+    [SerializeField] private List<Sprite> sprites;
     [SerializeField] private Color colorEmpty = Color.gray;
     [SerializeField] private Color colorJoined = Color.red;
     [SerializeField] private Color colorReady = Color.green;
@@ -158,6 +160,25 @@ public class LobbyManager : MonoBehaviour
 
         if (pi.playerIndex < players.Count)
         {
+            switch (pi.currentControlScheme)
+            {
+                case "KeyboardWASD":
+                    controls[pi.playerIndex].sprite = sprites[0]; // Asume que el 0 es WASD
+                    break;
+
+                case "KeyboardArrows":
+                    controls[pi.playerIndex].sprite = sprites[1]; // Asume que el 1 es Flechas
+                    break;
+
+                case "Gamepad":
+                    controls[pi.playerIndex].sprite = sprites[2]; // Asume que el 2 es Mando
+                    break;
+
+                default:
+                    controls[pi.playerIndex].sprite = sprites[2]; // Asume que el 2 es Mando
+                    break;
+            }
+           
             players[pi.playerIndex].SetActive(true);
             UpdateSlotUI(pi.playerIndex, false);
         }

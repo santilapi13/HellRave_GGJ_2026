@@ -16,6 +16,7 @@ public class WinnerText : MonoBehaviour
 
     private void ChangeToLobby()
     {
+        GameManager.Instance.ResetPlayers();
         SceneManager.LoadScene("Lobby");
     }
 }
