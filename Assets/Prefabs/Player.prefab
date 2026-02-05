@@ -442,8 +442,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee8d32428edc17143bff0d8f546e118e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  radioDeAtaque: 0.5
+  radioDeAtaque: 0.8
   atackCDR: 1
+  offsetAtaqueY: 0.4
   capaJugadores:
     serializedVersion: 2
     m_Bits: 64

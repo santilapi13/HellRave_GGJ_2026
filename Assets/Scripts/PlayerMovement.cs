@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Configuración del Ataque")]
     [SerializeField] private float radioDeAtaque = 0.5f;
     [SerializeField] private float atackCDR = 1.0f;
+    [SerializeField] private float offsetAtaqueY = 0.3f;
 
     [Header("Filtros")]
     [SerializeField] private LayerMask capaJugadores;
@@ -86,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
     public void EjecutarGolpe()
     {
 
-        Vector2 origen = (Vector2)transform.position;
+        Vector2 origen = (Vector2)transform.position + new Vector2(0, offsetAtaqueY);
         Collider2D[] todosLosTocados = Physics2D.OverlapCircleAll(origen, radioDeAtaque, capaJugadores);
 
         foreach (Collider2D col in todosLosTocados)
@@ -141,5 +142,11 @@ public class PlayerMovement : MonoBehaviour
         Destroy(child);
     }
 
-     
+    private void OnDrawGizmosSelected()
+    {
+        // Dibujar el radio de ataque
+        Gizmos.color = Color.red;
+        Vector3 attackCenter = transform.position + new Vector3(0, offsetAtaqueY, 0);
+        Gizmos.DrawWireSphere(attackCenter, radioDeAtaque);
+    }
 }

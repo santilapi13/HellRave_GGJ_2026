@@ -263,12 +263,14 @@ public class LobbyManager : MonoBehaviour
         while (timer > 0)
         {
             // Actualiza el texto (puedes usar winnerText si no tienes otro)
+            AudioManager.Instance?.PlaySFX("countdown",false);
             winnerText.text = Mathf.Ceil(timer).ToString();
             winnerTextShadow.text = winnerText.text;
             
             yield return new WaitForSeconds(1f);
             timer--;
         }
+        AudioManager.Instance?.PlaySFX("risa_random",false);
         StartGame();
     }
 
