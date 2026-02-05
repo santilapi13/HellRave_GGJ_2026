@@ -95,8 +95,6 @@ GameObject:
   - component: {fileID: 516246607924270250}
   - component: {fileID: 1023714494974084511}
   - component: {fileID: 2249699168850491632}
-  - component: {fileID: 3168596747338305705}
-  - component: {fileID: 8225516447731373484}
   - component: {fileID: 782750850463855018}
   - component: {fileID: 1177277182673757391}
   - component: {fileID: 6799876347617164482}
@@ -190,7 +188,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8592616244830951848}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ece4ccb15754ca74fa7f557f65995659, type: 3}
   m_Name: 
@@ -198,39 +196,8 @@ MonoBehaviour:
   speed: 2
   spriteRenderer: {fileID: 0}
   wanderRadius: 3
-  minWait: 0.5
-  maxWait: 2
---- !u!114 &3168596747338305705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8592616244830951848}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ece4ccb15754ca74fa7f557f65995659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCErraticMovement
-  speed: 2
-  spriteRenderer: {fileID: 0}
-  wanderRadius: 3
-  minWait: 0.5
-  maxWait: 2
---- !u!114 &8225516447731373484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8592616244830951848}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aeb7a589355ef346a4046fb948d4ab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCIdleMovement
-  speed: 2
-  spriteRenderer: {fileID: 0}
+  minWait: 3.5
+  maxWait: 6
 --- !u!114 &782750850463855018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,8 +213,6 @@ MonoBehaviour:
   animator: {fileID: 1177277182673757391}
   movements:
   - {fileID: 2249699168850491632}
-  - {fileID: 3168596747338305705}
-  - {fileID: 8225516447731373484}
 --- !u!95 &1177277182673757391
 Animator:
   serializedVersion: 7
@@ -348,8 +313,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.004631615, y: 0.3133335}
-  m_Size: {x: 0.22400093, y: 0.65754414}
+  m_Offset: {x: 0.0065042498, y: 0.33986342}
+  m_Size: {x: 0.3950413, y: 0.7386949}
   m_Direction: 0
 --- !u!1 &8684175588397607761
 GameObject:

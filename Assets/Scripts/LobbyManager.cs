@@ -45,8 +45,8 @@ public class LobbyManager : MonoBehaviour
 
     private void Start()
     {
-        AudioManager.Instance.StopMusic();
-        AudioManager.Instance.PlayMusic("Lobby");
+        AudioManager.Instance?.StopMusic();
+        AudioManager.Instance?.PlayMusic("Lobby");
     }
 
 
@@ -133,7 +133,7 @@ public class LobbyManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput pi)
     {
-        AudioManager.Instance.PlaySFX("join",false);
+        AudioManager.Instance?.PlaySFX("join",false);
         // 2. Registrar en el Manager
         PlayerConfigurationManager.Instance.AddPlayer(pi);
         SetupPlayerInLobby(pi);
@@ -215,7 +215,7 @@ public class LobbyManager : MonoBehaviour
         if (index < playerSlots.Count)
         {
             playerSlots[index].color = isReady ? colorReady : colorJoined;
-            if(isReady) AudioManager.Instance.PlaySFX("risa",false);
+            if(isReady) AudioManager.Instance?.PlaySFX("risa",false);
         }
     }
 
@@ -235,8 +235,8 @@ public class LobbyManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("MergeScene");
-        AudioManager.Instance.StopMusic();
-        AudioManager.Instance.PlayMusic("Game");
+        AudioManager.Instance?.StopMusic();
+        AudioManager.Instance?.PlayMusic("Game");
     }
 
     private void OnDestroy(){

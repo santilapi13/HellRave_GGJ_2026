@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class NPCManager : MonoBehaviour
 {
@@ -8,13 +9,23 @@ public class NPCManager : MonoBehaviour
     [SerializeField] private Transform npcContainer;
     [SerializeField] private Transform[] characters;
     [SerializeField] private GameObject playerCubePrefab;
+    [SerializeField] private GameObject npcPrefab;
     
     [Header("Behavior Configuration")]
-    [SerializeField] private int numberOfBehaviorTypes = 2;
+    [SerializeField] private int npcCount = 60;
 
     private GridManager gridManager;
     private List<Vector2Int> walkableTiles;
-    private int[] behaviorAssignments;
+    private List<Vector2Int> spawnTiles;
+    private int currentSpawnIndex = 0;
+
+    private Color[] hellPalette = new Color[]
+    {
+        new Color32(196, 30, 58, 255),   // #C41E3A (Rojo Sangre)
+        new Color32(255, 215, 0, 255),   // #FFD700 (Amarillo Azufre)
+        new Color32(112, 128, 144, 255), // #708090 (Gris Ceniza)
+        new Color32(128, 0, 128, 255)    // #800080 (Morado Magia)
+    };
 
     void Start()
     {
@@ -24,12 +35,13 @@ public class NPCManager : MonoBehaviour
             return;
         }
 
-        InstantiatePlayers();
         CollectWalkableTiles();
+        FilterSpawnTiles();
+        InstantiatePlayers();
         InitializeCharacters();
-        AssignBehaviors();
         initMap();
-        GameManager.Instance.GetPlayers();
+        if (GameManager.Instance != null)
+            GameManager.Instance.GetPlayers();
     }
 
     private void CollectWalkableTiles()
@@ -58,21 +70,71 @@ public class NPCManager : MonoBehaviour
         }
     }
 
+    private void FilterSpawnTiles()
+    {
+        spawnTiles = new List<Vector2Int>();
+
+        // Solo incluir tiles que tengan al menos 4 vecinos caminables
+        // Esto evita spawns en bordes o zonas con poco espacio
+        foreach (Vector2Int tile in walkableTiles)
+        {
+            int walkableNeighbors = 0;
+            
+            // Verificar los 8 vecinos adyacentes
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0) continue; // Saltar el centro
+                    
+                    Vector2Int neighbor = new Vector2Int(tile.x + dx, tile.y + dy);
+                    if (gridManager.IsWalkable(neighbor))
+                    {
+                        walkableNeighbors++;
+                    }
+                }
+            }
+            
+            // Si tiene al menos 4 vecinos caminables, es un buen lugar para spawn
+            if (walkableNeighbors >= 4)
+            {
+                spawnTiles.Add(tile);
+            }
+        }
+
+        // Randomizar la lista de spawn tiles
+        for (int i = spawnTiles.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            Vector2Int temp = spawnTiles[i];
+            spawnTiles[i] = spawnTiles[randomIndex];
+            spawnTiles[randomIndex] = temp;
+        }
+
+        if (spawnTiles.Count == 0)
+        {
+            Debug.LogWarning("No se encontraron tiles de spawn válidos. Usando todos los tiles caminables.");
+            spawnTiles = new List<Vector2Int>(walkableTiles);
+        }
+    }
+
     private void InitializeCharacters()
     {
-        if (npcContainer == null)
+        if (npcContainer == null || npcPrefab == null)
         {
             return;
         }
 
-        int childCount = npcContainer.childCount;
-        characters = new Transform[childCount];
+        characters = new Transform[npcCount];
 
-        for (int i = 0; i < childCount; i++)
+        for (int i = 0; i < npcCount; i++)
         {
-            characters[i] = npcContainer.GetChild(i);
+            GameObject npcInstance = Instantiate(npcPrefab, npcContainer);
+            npcInstance.SetActive(false); // Inicialmente desactivado
+            characters[i] = npcInstance.transform;
         }
 
+        // Randomizar el array de personajes
         for (int i = characters.Length - 1; i > 0; i--)
         {
             int randomIndex = Random.Range(0, i + 1);
@@ -80,51 +142,9 @@ public class NPCManager : MonoBehaviour
             characters[i] = characters[randomIndex];
             characters[randomIndex] = temp;
         }
-
     }
 
-    private void AssignBehaviors()
-    {
-        if (characters == null || characters.Length == 0)
-        {
-            return;
-        }
 
-        if (numberOfBehaviorTypes <= 0)
-        {
-            return;
-        }
-
-        behaviorAssignments = new int[characters.Length];
-        int npcsPerBehavior = characters.Length / numberOfBehaviorTypes;
-        int remainingNpcs = characters.Length % numberOfBehaviorTypes;
-
-        int assignmentIndex = 0;
-        for (int behaviorType = 0; behaviorType < numberOfBehaviorTypes; behaviorType++)
-        {
-            int count = npcsPerBehavior;
-            
-            if (behaviorType < remainingNpcs)
-            {
-                count++;
-            }
-
-            for (int i = 0; i < count; i++)
-            {
-                behaviorAssignments[assignmentIndex] = behaviorType;
-                assignmentIndex++;
-            }
-        }
-
-        for (int i = behaviorAssignments.Length - 1; i > 0; i--)
-        {
-            int randomIndex = Random.Range(0, i + 1);
-            int temp = behaviorAssignments[i];
-            behaviorAssignments[i] = behaviorAssignments[randomIndex];
-            behaviorAssignments[randomIndex] = temp;
-        }
-
-    }
 
     private void initMap()
     {
@@ -133,25 +153,26 @@ public class NPCManager : MonoBehaviour
             return;
         }
 
-        if (walkableTiles == null || walkableTiles.Count == 0)
+        if (spawnTiles == null || spawnTiles.Count == 0)
         {
             return;
         }
 
-        int tileIndex = 0;
+        // Continuar desde donde quedó el índice de spawn de los jugadores
+        int tileIndex = currentSpawnIndex;
 
         for (int i = 0; i < characters.Length; i++)
         {
-            if (tileIndex >= walkableTiles.Count)
+            if (tileIndex >= spawnTiles.Count)
             {
-                Debug.LogWarning($"Not enough walkable tiles for all characters. Placed {i} out of {characters.Length}.");
+                Debug.LogWarning($"Not enough spawn tiles for all characters. Placed {i} out of {characters.Length}.");
                 break;
             }
 
             Transform character = characters[i];
 
             // Obtener un tile aleatorio de la lista ya randomizada
-            Vector2Int gridPos = walkableTiles[tileIndex];
+            Vector2Int gridPos = spawnTiles[tileIndex];
             tileIndex++;
 
             // Convertir la posición de grid a posición del mundo
@@ -160,44 +181,9 @@ public class NPCManager : MonoBehaviour
 
             character.position = worldPosition;
 
-            // Asignar comportamiento al NPC
-            GenericNPC npcComponent = character.GetComponent<GenericNPC>();
-            if (npcComponent != null)
-            {
-                NPCMovement[] allBehaviors = character.GetComponents<NPCMovement>();
-                
-                if (allBehaviors.Length > 0)
-                {
-                    int assignedBehaviorIndex = behaviorAssignments[i];
-                    
-                    // Desactivar todos los comportamientos primero
-                    for (int j = 0; j < allBehaviors.Length; j++)
-                    {
-                        allBehaviors[j].enabled = false;
-                    }
-                    
-                    // Activar solo el comportamiento asignado
-                    if (assignedBehaviorIndex < allBehaviors.Length)
-                    {
-                        allBehaviors[assignedBehaviorIndex].enabled = true;
-                    }
-                
-                }
-            
-            }
-
             SpriteRenderer sr = characters[i].GetComponent<SpriteRenderer>();
-            Color[] hellPalette = new Color[]
-            {
-             new Color32(196, 30, 58, 255),   // #C41E3A (Rojo Sangre)
-             new Color32(255, 215, 0, 255),   // #FFD700 (Amarillo Azufre)
-             new Color32(112, 128, 144, 255), // #708090 (Gris Ceniza)
-             new Color32(128, 0, 128, 255)    // #800080 (Morado Magia)
-            };
-
             if (sr != null)
             {
-
                 sr.color = hellPalette[Random.Range(0, hellPalette.Length)];
             }
 
@@ -220,8 +206,17 @@ public class NPCManager : MonoBehaviour
 
      private void SpawnPlayer(PlayerConfigurationManager.PlayerData config)
     {
-        
+        // Obtener una posición de spawn única usando el índice
         Vector3 spawnPos = Vector3.zero;
+        
+        if (spawnTiles != null && spawnTiles.Count > 0 && currentSpawnIndex < spawnTiles.Count)
+        {
+            Vector2Int spawnTile = spawnTiles[currentSpawnIndex];
+            currentSpawnIndex++;
+            spawnPos = gridManager.GridToWorld(spawnTile);
+            spawnPos.z = 0f;
+        }
+        
         var playerInstance = PlayerInput.Instantiate(
             playerCubePrefab,
             playerIndex: config.PlayerIndex,
@@ -230,6 +225,14 @@ public class NPCManager : MonoBehaviour
             pairWithDevice: config.Device // Esto asegura que use el teclado correcto o el gamepad
         );
         playerInstance.name = $"Jugador {config.PlayerIndex + 1}";
+        playerInstance.transform.position = spawnPos;
         playerInstance.transform.SetParent(npcContainer.transform);
+        
+        // Asignar color aleatorio al jugador
+        SpriteRenderer playerSr = playerInstance.GetComponent<SpriteRenderer>();
+        if (playerSr != null)
+        {
+            playerSr.color = hellPalette[Random.Range(0, hellPalette.Length)];
+        }
     }
 }

@@ -11,7 +11,9 @@ public class GenericNPC : MonoBehaviour
 
     public void Die(Transform player)
     {
-        AudioManager.Instance.PlaySFX("push",false);
+        int randomIndex = Random.Range(1, 3);
+        string sfxName = "empujon_" + randomIndex;
+        AudioManager.Instance?.PlaySFX(sfxName,false);
         animator.SetTrigger("Pushed");
         Guard.Instance.ChangeToChase(player);
     }

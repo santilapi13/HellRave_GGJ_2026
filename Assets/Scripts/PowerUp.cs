@@ -15,7 +15,7 @@ public class PowerUp : MonoBehaviour
 
     private void EnablePowerUp()
     {
-        AudioManager.Instance.PlaySFX("power",false);
+        AudioManager.Instance?.PlaySFX("power",false);
         light.SetActive(true);
         collider.enabled = true;
     }
@@ -24,7 +24,7 @@ public class PowerUp : MonoBehaviour
     {
         if (!collision.CompareTag("Player")) return;
 
-        AudioManager.Instance.PlaySFX("powerUp",false);
+        AudioManager.Instance?.PlaySFX("powerUp",false);
         UnityEngine.InputSystem.PlayerInput[] activePlayers = FindObjectsByType<UnityEngine.InputSystem.PlayerInput>(FindObjectsSortMode.None);
 
         foreach (var player in activePlayers)
@@ -41,5 +41,6 @@ public class PowerUp : MonoBehaviour
 
         light.SetActive(false);
         collider.enabled = false;
+        Invoke("EnablePowerUp", enableAfterSeconds);
     }
 }

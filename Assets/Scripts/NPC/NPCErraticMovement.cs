@@ -49,6 +49,10 @@ public class NPCErraticMovement : NPCMovement
 
     IEnumerator ErraticRoutine()
     {
+        yield return new WaitForSeconds(
+            Random.Range(0f, maxWait)
+        );
+
         while (true)
         {
             Vector3 target = GetRandomNearbyPoint();
@@ -65,7 +69,8 @@ public class NPCErraticMovement : NPCMovement
         Vector2Int start = grid.WorldToGrid(transform.position);
         Vector2Int end   = grid.WorldToGrid(worldTarget);
 
-        if (!grid.IsWalkable(end))
+        // Validar que ambas posiciones estén dentro de los límites del grid
+        if (!grid.IsWalkable(start) || !grid.IsWalkable(end))
             return;
 
         List<Vector2Int> gridPath =

@@ -25,6 +25,20 @@ public class Guard : MonoBehaviour
         erraticMovement.enabled = false;
         chasePlayerMovement.enabled = false;
         animator.SetBool("isChasing", false);
+        RisaAleatoria();
+        
+    }
+
+    private void RisaAleatoria()
+    {
+        float randomTime = Random.Range(5f, 30f);
+        Invoke("Reirse", randomTime);
+    }
+
+    private void Reirse()
+    {
+        AudioManager.Instance?.PlaySFX("risa_random", false);
+        RisaAleatoria();
     }
 
     public void ChangeToChase(Transform playerToChase)
@@ -32,6 +46,7 @@ public class Guard : MonoBehaviour
         erraticMovement.enabled = false;
         chasePlayerMovement.SetTarget(playerToChase);
         chasePlayerMovement.enabled = true;
+        AudioManager.Instance?.PlaySFX("smokin", false);
         animator.SetBool("isChasing", true);
     }
 
