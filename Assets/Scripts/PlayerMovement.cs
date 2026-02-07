@@ -79,8 +79,22 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         if(!CanMove) return;
+        
+        Vector2 adjustedInput = moveInput;
+        
+        // Si hay movimiento diagonal (ambas componentes no son cero)
+        if (Mathf.Abs(moveInput.x) > 0.1f && Mathf.Abs(moveInput.y) > 0.1f)
+        {
+            // Ajustar a 30 grados en vez de 45
+            // cos(30°) ≈ 0.866, sin(30°) = 0.5
+            float signX = Mathf.Sign(moveInput.x);
+            float signY = Mathf.Sign(moveInput.y);
+            adjustedInput = new Vector2(signX * 0.866f, signY * 0.5f);
+        }
+        
         // Movimiento simple modificando el transform
-        Vector3 movement = new Vector3(moveInput.x,moveInput.y, 0) * speed * Time.deltaTime;
+        Vector3 movement = new Vector3(adjustedInput.x, adjustedInput.y, 0) * speed * Time.deltaTime;
+
         transform.Translate(movement);
     }
 
