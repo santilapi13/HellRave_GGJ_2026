@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class NPCManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class NPCManager : MonoBehaviour
     private List<Vector2Int> walkableTiles;
     private List<Vector2Int> spawnTiles;
     private int currentSpawnIndex = 0;
+
+    [SerializeField] private List<Image> playerUI;
 
     private Color[] hellPalette = new Color[]
     {
@@ -233,6 +236,14 @@ public class NPCManager : MonoBehaviour
         if (playerSr != null)
         {
             playerSr.color = hellPalette[Random.Range(0, hellPalette.Length)];
+        }
+        
+        PlayerMovement playerM = playerInstance.GetComponent<PlayerMovement>();
+        
+        if(playerM != null)
+        {
+            Image i = playerUI[config.PlayerIndex];
+            playerM.initializeUI(i);
         }
     }
 }

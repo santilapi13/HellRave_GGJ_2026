@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -34,6 +35,12 @@ public class PlayerMovement : MonoBehaviour
     private bool isDead = false;
     
     private Vector2 moveInput;
+    private Image playerUI;
+
+    
+    [SerializeField] private Color colorDead = Color.red;
+    [SerializeField] private Color colorAlive = Color.green;
+
 
     private void Awake()
     {
@@ -134,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Die()
     {
+       endUI();
        animator.speed = 0;
        CanMove = false;
        isDead = true;
@@ -162,5 +170,24 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.red;
         Vector3 attackCenter = transform.position + new Vector3(0, offsetAtaqueY, 0);
         Gizmos.DrawWireSphere(attackCenter, radioDeAtaque);
+    }
+
+    public void initializeUI(Image targetImage)
+    {
+        if (targetImage == null) return;
+
+        // Aseguramos que el objeto esté prendido
+        targetImage.gameObject.SetActive(true); 
+        targetImage.color = colorAlive;
+        
+        // Si no necesitas que el usuario haga click en ella, desactiva esto para ganar performance
+        targetImage.raycastTarget = false; 
+
+        playerUI = targetImage;
+    }
+
+    private void endUI()
+    {
+        playerUI.color = colorDead;
     }
 }
