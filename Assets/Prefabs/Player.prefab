@@ -443,13 +443,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   radioDeAtaque: 0.6
-  atackCDR: 1
+  atackCDR: 2
   offsetAtaqueY: 0.3
   capaJugadores:
     serializedVersion: 2
     m_Bits: 64
   speed: 2
   animator: {fileID: 2919191841066205038}
+  colorDead: {r: 1, g: 0, b: 0, a: 1}
+  colorAlive: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &5875821381487834070
 MonoBehaviour:
   m_ObjectHideFlags: 0
