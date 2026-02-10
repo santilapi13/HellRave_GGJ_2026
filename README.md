@@ -33,9 +33,9 @@ You can see a gameplay here: https://youtu.be/KlLz4KkGEa0
 
 ## Team
 Devs
-- Nahuel Bianca
-- Santiago Lapiana
-- Gonzalo Martino
+- [Nahuel Bianca](https://github.com/Bianca-Nahuel)
+- [Santiago Lapiana](https://github.com/santilapi13)
+- [Gonzalo Martino](https://github.com/GonzanDev)
 
 Art
 - Yamil Tahuil
@@ -43,4 +43,4 @@ Art
 - Dana Lopez
 
 Music & SFX
-- Valentín Cueva Buono
+- [Valentín Cueva Buono](https://github.com/ValenCBgit)
