@@ -21,8 +21,7 @@ But beware: everyone else is a human in disguise too, and only one will survive 
 
 
 ## Download and play it on Windows
-1. Go to "Game zipped executable" in the Releases section
-2. Download the file named "HellRave.vx.zip" (where 'x' is the latest version)
+1. Go to "Game zipped executable" in the Releases section (or click [here](https://github.com/santilapi13/HellRave_GGJ_2026/releases/download/GameExecutable/HellRave.v5.zip))
 3. Unzip
 4. Play
 
