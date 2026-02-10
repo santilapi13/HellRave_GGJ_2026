@@ -78,4 +78,9 @@ public class AudioManager : MonoBehaviour
         } else
             sfxSource.PlayOneShot(s.clip);
     }
+
+    public bool IsPlayingMusic()
+    {
+        return musicSource.isPlaying;
+    }
 }

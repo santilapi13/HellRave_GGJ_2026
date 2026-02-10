@@ -47,8 +47,10 @@ public class ChasePlayerMovement : NPCMovement
 
     private void BuildPathToPlayer()
     {
-        if (targetPlayer == null || grid == null || pathfinder == null)
+        if (targetPlayer == null || grid == null || pathfinder == null) {
+            guard?.ChangeToErratic();
             return;
+        }
 
         Vector2Int start = grid.WorldToGrid(transform.position);
         Vector2Int end = grid.WorldToGrid(targetPlayer.position);
@@ -70,10 +72,19 @@ public class ChasePlayerMovement : NPCMovement
 
     void Update()
     {
-        if (targetPlayer == null) return;
+        if (targetPlayer == null)
+        {
+            guard?.ChangeToErratic();
+            return;
+        }
 
+        try {
         ChasePlayer();
         FollowPath();
+        } catch (System.Exception ex) {
+            Debug.LogError("Error in ChasePlayerMovement: " + ex.Message);
+            guard?.ChangeToErratic();
+        }
     }
 
     void FollowPath()

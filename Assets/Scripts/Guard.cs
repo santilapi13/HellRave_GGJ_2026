@@ -26,7 +26,6 @@ public class Guard : MonoBehaviour
         chasePlayerMovement.enabled = false;
         animator.SetBool("isChasing", false);
         RisaAleatoria();
-        
     }
 
     private void RisaAleatoria()

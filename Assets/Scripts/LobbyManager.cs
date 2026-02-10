@@ -28,6 +28,7 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField] private TMPro.TextMeshProUGUI winnerText;
     [SerializeField] private TMPro.TextMeshProUGUI winnerTextShadow;
+    [SerializeField] private GameObject countdownTransparency;
 
     [Header("Countdown")]
     [SerializeField] private float countdownTime = 3f;
@@ -204,6 +205,7 @@ public class LobbyManager : MonoBehaviour
             countdownCoroutine = null;
             winnerText.text = ""; // Limpia el texto
             winnerTextShadow.text = "";
+            countdownTransparency.SetActive(false);
         }
         Animator anim =  players[player.PlayerIndex].GetComponent<Animator>();
         anim.SetTrigger("ChangeState");
@@ -260,6 +262,7 @@ public class LobbyManager : MonoBehaviour
     private System.Collections.IEnumerator StartCountdownRoutine()
     {
         float timer = countdownTime;
+        countdownTransparency.SetActive(true);
         while (timer > 0)
         {
             // Actualiza el texto (puedes usar winnerText si no tienes otro)

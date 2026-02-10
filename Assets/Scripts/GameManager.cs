@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(winner);
             
             Destroy(Guard.Instance.gameObject);
+            AudioManager.Instance?.PlayMusic("Lobby");
+            AudioManager.Instance?.PlaySFX("join", false);
             SceneManager.LoadScene("GameOverScene");
             winner.transform.position = new Vector3(0.5f, -1.85f, 0);
             winner.transform.localScale = new Vector3(7, 7, 1);
