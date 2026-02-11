@@ -26,7 +26,7 @@ But beware: everyone else is a human in disguise too, and only one will survive 
 4. Play
 
 ## Gameplay
-You can see a gameplay here: https://youtu.be/KlLz4KkGEa0
+You can see a gameplay here: [GAMEPLAY](https://youtu.be/jlgBxSjWtkc)
 
 <img width="1918" height="1080" alt="image" src="https://github.com/user-attachments/assets/bc3ffc55-4708-4ce1-981b-79464256a783" />
 
