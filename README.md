@@ -1,4 +1,4 @@
-# HellRave - Global Game Jam 2026 🌐🎮
+# [HellRave](https://elcrustaceo.itch.io/hellrave) - Global Game Jam 2026 🌐🎮
 <img width="1920" height="1080" alt="portada intro (1)" src="https://github.com/user-attachments/assets/6b5a2f34-88b3-4796-9296-12e754884096" />
 
 
